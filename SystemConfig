@@ -1,0 +1,28 @@
+dest root /
+dest ram /tmp
+lists_dir ext /var/opkg-lists
+option overlay_root /overlay
+src/gz base http://downloads.openwrt.org/chaos_calmer/15.05/ramips/rt305x/packages/base
+src/gz packages http://downloads.openwrt.org/chaos_calmer/15.05/ramips/rt305x/packages/packages
+src/gz management http://downloads.openwrt.org/chaos_calmer/15.05/ramips/rt305x/packages/management
+
+
+
+
+opkg install curl libcurl libpolarssl
+
+Kill process
+ps  w |grep mjpg |grep -v 'grep'|awk '{print $1}' | xargs kill 
+
+
+
+crontab 
+* 6-20 * * * sleep 50;sh /ImageUpload.sh
+* 6-20 * * * sleep 10;sh /ImageUpload.sh
+* 6-20 * * * sleep 20;sh /ImageUpload.sh
+* 6-20 * * * sleep 30;sh /ImageUpload.sh
+* 6-20 * * * sleep 40;sh /ImageUpload.sh
+* 6-20 * * * sync && sh /ImageUpload.sh
+2 20 * * * ps  w |grep mjpg |grep -v 'grep'|awk '{print $1}' | xargs kill 
+58 5 * * * mjpg_streamer -i "input_uvc.so  -d /dev/video0 -r 640x480" -o "output_http.so -p 8080 -w /www/webcam" &
+* 0-3 * * * ps  w |grep mjpg |grep -v 'grep'|awk '{print $1}' | xargs kill

@@ -1,0 +1,20 @@
+echo "Startup..."
+while true
+do	
+	echo "Geting Image ..."
+	filename=`date +%Y-%m-%d-%H-%M-%S`	
+	echo $filename
+	wget "http://localhost:8080/?action=snapshot" -O /dev/shm/$filename.jpg
+	echo "Uploading ..."
+	curl -F file=@/dev/shm/$filename.jpg "http://xxxxxx/upload.php?Token=xxxx"
+	rm -rf /dev/shm/$filename.jpg
+	echo "Uploading ... OK"
+	echo "Delay 10 sec"
+	sleep 10
+done
+
+
+mjpg_streamer -i "input_uvc.so -d /dev/video0 -r 640x480" -o "output_file.so -d 5000 -f /img"
+mjpg_streamer -i "input_uvc.so  -d /dev/video0 -r 640x480" -o "output_http.so -p 8080 -w /www/webcam" &
+wget "http://localhost:8080/?action=snapshot" -O /img/1.jpg
+
